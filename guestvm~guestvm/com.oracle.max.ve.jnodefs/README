@@ -1,0 +1,11 @@
+This project (directory) is the the Ext2 file system implementation from the JNode operating
+system (http://www.jnode.org), release 0.2.8, modified to work in the context of Guest VM.
+
+The modifications are very minor, a couple of trivial API changes, and a change from
+Apache logging to the Java platform logging API (and the very simple implementation of that
+provided by Guest VM). In addition actual logging has been made conditional on the current level
+to avoid generating the data when the logging will not occur.
+
+Of 64 files copied from JNode, 22 were modified, and are clearly annotated to that effect
+with the Sun copyright. The modified files are licensed under GPL utilizing the upgrade option
+for combined works from LGPL to GPL.

@@ -1,0 +1,111 @@
+#! /bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# Maxine VE is a Java virtual machine, so we provide a "java" launch command.
+# However, some users may find the "run" command easier to work with.
+
+# This script sets up java.home to the ext2 disk0 directory implied by JAVA_HOME
+
+jh=${JAVA_HOME##*/}
+jar=""
+classpath=$CLASSPATH
+gukargs=""
+ramdisk=""
+javahome="-Djava.home=/maxve/java/$jh/jre"
+
+# Resolve location of this script
+me="${BASH_SOURCE[0]}"
+while [ -h "$me" ]; do
+    me=`readlink -e "$me"`
+done
+# this assumes this script is in bin that is a sibling of xmconfigs
+ve_dir=`dirname $me`
+ve_dir=`dirname $ve_dir`
+# ensure absoluteSys
+ve_dir=`cd $ve_dir; pwd`
+native_dir=$ve_dir/com.oracle.max.ve.native
+
+if [ ! -d $native_dir/xmconfigs ] ; then
+  echo "no xmconfigs directory in $native_dir"
+  exit 1
+fi
+
+vmargs="$javahome -Dmax.ve.dir=$parent -Dmax.ve.pid=$$"
+
+while [ "$1" != "" ] ;
+do
+  case "$1" in
+    -cp | -classpath )
+      shift
+      classpath=$1
+      ;;
+    -jar )
+      shift
+      jar=$1
+      ;;
+    -XX:GUK* )
+      if [ "$gukargs" = "" ] ;
+      then
+        gukargs=${1}
+      else
+        gukargs="$gukargs ${1}"
+      fi
+      ;;
+    -D* | -X* | -XX* )
+      if [ "$vmargs" = "" ] ;
+      then
+        vmargs=${1}
+       else
+        vmargs="$vmargs ${1}"
+      fi
+      ;;
+    * )
+      break
+      ;;
+  esac
+  shift
+done
+
+if [ "$jar" == "" ] ;
+then
+  if [ "$classpath" != "" ] ;
+  then
+    cp="-classpath $classpath"
+  fi
+else
+  cp="-jar $jar"
+fi
+
+name=MaxVE-${USER}-$$
+javaxtra="$vmargs $cp $*"
+extra="$gukargs $javaxtra"
+if [ ${#extra} -ge 1023 ] ; then
+  argsfile=".$name-args"
+  echo "${#javaxtra}" > $argsfile
+  echo $javaxtra >> $argsfile
+  extra="$gukargs -XX:GVMRamArgs"
+  ramdisk="ramdisk=$argsfile"
+fi
+export IMAGE_DIR=$native_dir
+#echo /usr/sbin/xm create -c $native_dir/xmconfigs/domain_config_generic extra="$extra" name=$name $ramdisk
+/usr/sbin/xm create -c $native_dir/xmconfigs/domain_config_generic extra="$extra" name=$name $ramdisk

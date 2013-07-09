@@ -1,0 +1,72 @@
+#! /bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# Setup for other ext2 scripts
+#
+
+# Resolve location of this script
+    me="${BASH_SOURCE[0]}"
+    while [ -h "$me" ]; do
+        me=`readlink -e "$me"`
+    done
+
+me_dir=`dirname $me`
+export ve_dir=`cd $me_dir/..; pwd`
+
+
+if [ -n "${DISK}" ] ; then
+  dfile=$DISK
+fi
+mc=com.sun.max.ve.tools.ext2.Ext2FileTool
+h="-Dmax.ve.logging.handler=com.sun.max.ve.logging.SystemOutLogHandler -Dmax.ve.logging.level=WARNING"
+
+while [ "$1" != "" ];
+do
+  case $1 in
+    -disk )
+      shift
+      dfile=$1
+      ;;
+    -wsroot )
+      shift
+      ve_dir=$1
+      ;;
+    * )
+      break
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$dfile" ]; then
+  echo "no disk specified, use -disk or set DISK environment variable"
+  exit 1
+fi
+
+cp=$ve_dir/com.oracle.max.ve/bin:$ve_dir/com.oracle.max.ve.base/bin:$ve_dir/com.oracle.max.ve.tools/bin:$ve_dir/com.oracle.max.ve.jnodefs/bin
+
+if [ ! -d "$ve_dir/com.oracle.max.ve.tools/bin" ] ;
+then
+  echo "cannot find classes for Ext2FileTool, set -wsroot to directory containing MaxVE projects"
+  exit 1;
+fi

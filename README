@@ -1,0 +1,8 @@
+The Maxine Virtual Edition (VE) is a Java platform, implemented in Java, that runs directly on the Xen hypervisor.
+
+Maxine VE is based on the Maxine VM and has an integrated network stack and file system written in Java. 
+It runs on 64 bit x86 systems running the Xen hypervisor.
+
+Project licensed under GPL 2 with Classpath Exception.
+
+Repo-maintainer's Note: This is a snapshot from the original project's source hosted on https://kenai.com/projects/guestvm

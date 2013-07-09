@@ -1,0 +1,13 @@
+
+syntax: regexp
+^objs$
+syntax: regexp
+\.out$
+syntax: regexp
+^guestvm$
+syntax: glob
+guestvm-*
+syntax: glob
+*.class
+syntax: glob
+zlibobjs/*

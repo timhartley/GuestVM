@@ -1,0 +1,109 @@
+#! /bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+# Installs the key components of a Java installation in /java
+
+# Resolve location of this script
+    me="${BASH_SOURCE[0]}"
+    while [ -h "$me" ]; do
+        me=`readlink -e "$me"`
+    done
+
+me_dir=`dirname $me`
+. $me_dir/ext2setup
+
+if [ "$JAVA_HOME" = "" ] ;
+then
+  echo JAVA_HOME must be set
+  exit 1
+fi
+
+while [ "$1" != "" ];
+do
+  case $1 in
+  -javahome )
+    shift
+    javahome=$1
+    ;;
+  * )
+    break
+    ;;
+  esac
+  shift
+done
+
+if [ "$javahome" = "" ] ;
+then
+  if [ "$JAVA_HOME" = "" ] ;
+  then
+    echo JAVA_HOME must be set
+    exit 1
+  fi
+  javahome=$JAVA_HOME
+fi
+
+ext2jh=/${javahome##*/}
+java -classpath $cp $h $mc mkdir -disk $dfile -ext2path $ext2jh
+java -classpath $cp $h $mc mkdir -disk $dfile -ext2path $ext2jh/lib
+java -classpath $cp $h $mc mkdir -disk $dfile -ext2path $ext2jh/jre
+java -classpath $cp $h $mc mkdir -disk $dfile -ext2path $ext2jh/jre/lib
+java -classpath $cp $h $mc mkdir -disk $dfile -ext2path $ext2jh/jre/lib/amd64
+
+# create a fake java executable to keep certain apps happy
+java -classpath $cp $h $mc mkdir -disk $dfile -ext2path $ext2jh/jre/bin
+java -classpath $cp $h $mc mkfile -disk $dfile -ext2path $ext2jh/jre/bin/java
+
+# tools.jar
+java -classpath $cp $h $mc copyin -disk $dfile -from $JAVA_HOME/lib/tools.jar -ext2path $ext2jh/lib
+
+# runtime jars
+dir=$javahome/jre/lib
+todir=$ext2jh/jre/lib
+
+java -classpath $cp $h $mc copyin -disk $dfile -from ${dir}/rt.jar -ext2path $todir
+java -classpath $cp $h $mc copyin -disk $dfile -from ${dir}/jce.jar -ext2path $todir
+java -classpath $cp $h $mc copyin -disk $dfile -from ${dir}/jsse.jar -ext2path $todir
+java -classpath $cp $h $mc copyin -disk $dfile -from ${dir}/resources.jar -ext2path $todir
+java -classpath $cp $h $mc copyin -disk $dfile -from ${dir}/charsets.jar -ext2path $todir
+java -classpath $cp $h $mc copyin -disk $dfile -from ${dir}/management-agent.jar -ext2path $todir
+
+# properties
+props=`ls $javahome/jre/lib/*.properties`
+
+for prop in $props; do
+  java -classpath $cp $h $mc copyin -disk $dfile -from $prop -ext2path $todir
+  
+done
+
+# security/zi
+
+java -classpath $cp $h $mc copyin -r -disk $dfile -from ${dir}/security -ext2path $todir
+java -classpath $cp $h $mc copyin -r -disk $dfile -from ${dir}/zi -ext2path $todir
+
+# management
+java -classpath $cp $h $mc copyin -r -disk $dfile -from ${dir}/management -ext2path $todir
+
+#ext
+java -classpath $cp $h $mc copyin -r -disk $dfile -from ${dir}/ext -ext2path $todir
+
+# instrument library - must exist even though content irrelevant
+java -classpath $cp $h $mc copyin -r -disk $dfile -from ${dir}/amd64/libinstrument.so $todir/amd64

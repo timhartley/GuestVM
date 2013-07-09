@@ -1,0 +1,9 @@
+# Edit this file to configure your default network settings
+# The assumption is that DHCP will be used
+max.ve.net.dhcp=true
+# Uncomment previous line and edit the following for static IP configuration
+# max.ve.net.ipaddress=
+# max.ve.net.gateway=
+# max.ve.net.netmask=
+# max.ve.net.nameserver=
+# max.ve.net.domainname=

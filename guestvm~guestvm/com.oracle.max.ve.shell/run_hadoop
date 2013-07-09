@@ -1,0 +1,35 @@
+#! /bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# Run Hadoop
+#
+
+if [ -z "$HADOOP_DIR" ] ;
+then
+  echo "HADOOP_DIR must be set"
+  exit 1
+fi
+
+jh=${JAVA_HOME##*/}
+
+com.oracle.max.ve.shell/run -echo -J-Dmax.ve.process.filterclasses=com.sun.max.ve.process.HadoopProcessFilters -J-Djava.home=/maxve/java/$jh/jre -J-Duser.home=$HADOOP_DIR "-J-Dmax.ve.fs.table=ext2:/blk/0:/maxve/java:ro;ext2:/blk/1:$HADOOP_DIR;ext2:/blk/2:/scratch" -J-Dhadoop.root.logger=INFO,console -J-Duser.name=acme -J-Dhadoop.home.dir=$HADOOP_DIR -J-Duser.dir=$HADOOP_DIR -J-Dmax.ve.groups=acme -classpath $HADOOP_DIR/conf:/maxve/java/$jh/lib/tools.jar:$HADOOP_DIR:$HADOOP_DIR/hadoop-0.18.3-core.jar:$HADOOP_DIR/lib/commons-cli-2.0-SNAPSHOT.jar:$HADOOP_DIR/lib/commons-codec-1.3.jar:$HADOOP_DIR/lib/commons-httpclient-3.0.1.jar:$HADOOP_DIR/lib/commons-logging-1.0.4.jar:$HADOOP_DIR/lib/commons-logging-api-1.0.4.jar:$HADOOP_DIR/lib/commons-net-1.4.1.jar:$HADOOP_DIR/lib/jets3t-0.6.0.jar:$HADOOP_DIR/lib/jetty-5.1.4.jar:$HADOOP_DIR/lib/junit-3.8.1.jar:$HADOOP_DIR/lib/kfs-0.1.3.jar:$HADOOP_DIR/lib/log4j-1.2.15.jar:$HADOOP_DIR/lib/oro-2.0.8.jar:$HADOOP_DIR/lib/servlet-api.jar:$HADOOP_DIR/lib/slf4j-api-1.4.3.jar:$HADOOP_DIR/lib/slf4j-log4j12-1.4.3.jar:$HADOOP_DIR/lib/xmlenc-0.52.jar:$HADOOP_DIR/lib/jetty-ext/commons-el.jar:$HADOOP_DIR/lib/jetty-ext/jasper-compiler.jar:$HADOOP_DIR/lib/jetty-ext/jasper-runtime.jar:$HADOOP_DIR/lib/jetty-ext/jsp-api.jar $*

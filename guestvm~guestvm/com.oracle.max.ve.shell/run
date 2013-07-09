@@ -1,0 +1,287 @@
+#! /bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# Script to run Maxine Virtual Edition images
+#
+java_launcher_compat=1
+config="generic"
+echocmd=0
+mainclass=""
+db_debug="-XX:GUKDebugDB"
+xg_debug="-XX:GUKDebugXG"
+upcalls="-XX:GUKAS"
+xtra_args=""
+gukargs=""
+run=1
+help=0
+name=""
+classpath="/maxve/image/com.oracle.max.ve/bin"
+guest=""
+jar=""
+ramdisk=""
+
+# Resolve location of this script
+me="${BASH_SOURCE[0]}"
+while [ -h "$me" ]; do
+    me=`readlink -e "$me"`
+done
+# this assumes this script is in bin that is a sibling of xmconfigs
+ve_dir=`dirname $me`
+ve_dir=`dirname $ve_dir`
+# ensure absoluteSys
+ve_dir=`cd $ve_dir; pwd`
+native_dir=$ve_dir/com.oracle.max.ve.native
+
+if [ ! -d $native_dir/xmconfigs ] ; then
+  echo "no xmconfigs directory in $native_dir"
+  exit 1
+fi
+
+fst="ext2:/blk/0:/maxve/java:ro,auto"
+vmargs="-Dmax.ve.dir=$native_dir -Dmax.ve.pid=$$"
+
+function show_help() {
+  echo "run the Maxine Virtual Edition image
+options:
+  -k            set keyword argument mode
+  -echo         echo the full xm create command
+  -cf <cf>      set the domain config file to xmconfigs/domain_config_cf (default generic)
+  -db           run in debug mode (wait for Inspector to connect via dbfront)
+  -xg           run in debug mode (wait for Inspector to connect via xg)  
+  -d            same as -db
+  -a <arg>      force arg as program arg (only necessary if arg has leading -)
+  -n            force -echo but do not execute the xm create command
+  -J<args>      set VM argument(s)
+  -main class   main class to invoke
+  -mx <n>       equivalent to -J-Xmxn
+  -ms <n>       equivalent to -J-Xmsn
+  -name <name>  set domain name (default MaxVE-mainclass-\$USER-\$\$ or MaxVE-\$USER-\$\$)
+  -memory <n>   set initial domain memory to n (default: from config file)
+  -maxmem <n>   set maximum domain memory to n (default: from config file)
+  -jar <file>   extract main class from jar file
+  -js           enable the Java thread scheduler
+  -fstable fst  set max.ve.fs.table=fst
+  -javahome jh  set java.home=jh"
+}
+
+while [ "$1" != "" ] ;
+do
+#  echo "$1"
+  case "$1" in
+  -k )
+    java_launcher_compat=0
+    ;;
+  -echo )
+    echocmd=1
+    ;;
+  -help )
+    help=1
+    ;;
+  -cf )
+    shift
+    config=$1
+    ;;
+  -d | -db )
+    if [ "$gukargs" = "" ] ;
+    then
+      gukargs=$db_debug
+    else
+      gukargs="$gukargs $db_debug"
+    fi
+    ;;
+  -xg )
+    if [ "$gukargs" = "" ] ;
+    then
+      gukargs=$xg_debug
+    else
+      gukargs="$gukargs $xg_debug"
+    fi
+    ;;
+  -a )
+    shift
+    if [ "$xtra_args" = "" ] ;
+    then
+      xtra_args=$1
+    else
+      xtra_args="$xtra_args $1"
+    fi
+    ;;
+  -n )
+    echocmd=1
+    run=0
+    ;;
+  -fstable )
+    shift
+    fst=$1
+    ;;
+  -javahome )
+    shift
+    javahome=$1
+    ;;
+  -J-XX:GUK* )
+    if [ "$gukargs" = "" ] ;
+    then
+      gukargs=${1/-J/}
+    else
+      gukargs="$gukargs ${1/-J/}"
+    fi
+    ;;
+  -J* )
+    if [ "$vmargs" = "" ] ;
+    then
+      vmargs=${1/-J/}
+    else
+      vmargs="$vmargs ${1/-J/}"
+    fi
+    ;;
+  -main )
+    shift
+    mainclass=$1
+    ;;
+  -mx )
+    shift
+    if [ "$vmargs" = "" ] ;
+    then
+      vmargs="-Xmx$1"
+    else
+      vmargs="$vmargs -Xmx$1"
+    fi
+    ;;
+  -ms )
+    shift
+    if [ "$vmargs" = "" ] ;
+    then
+      vmargs="-Xms$1"
+    else
+      vmargs="$vmargs -Xms$1"
+    fi
+    ;;
+  -name )
+    shift
+    name=$1
+    ;;
+  -memory )
+    shift
+    memory="memory=$1"
+    ;;
+  -maxmem )
+    shift
+    maxmem="maxmem=$1"
+    ;;
+  -cp | -classpath )
+    shift
+    classpath=$1
+    ;;
+  -jar )
+    shift
+    jar=$1
+    if [ "$java_launcher_compat" -eq 1 ] ; then
+        shift
+        xtra_args=$*
+        break
+    fi
+    ;;
+  -g )
+    shift
+    guest=$1
+    ;;
+  -js )
+    if [ "$gukargs" = "" ] ;
+    then
+      gukargs=$upcalls
+    else
+      gukargs="$gukargs $upcalls"
+    fi
+    ;;
+  -* )
+    echo "unknown option $1"
+    exit 1
+    ;;
+  * )
+    if [ "$java_launcher_compat" -eq 1 ] ; then
+        if [ "$jar" == "" ] ; then
+          mainclass=$1
+        fi
+        shift
+        xtra_args=$*
+        break
+    else
+        if [ "$xtra_args" = "" ] ;
+        then
+          xtra_args=$1
+        else
+          xtra_args="$xtra_args $1"
+        fi
+    fi
+    ;;
+  esac
+  shift
+done
+
+if [ $help -eq 1 ] ; then
+  show_help
+  exit 0
+fi
+
+if [ -z "$javahome" ]; then
+  if [ -z "$JAVA_HOME" ] ; then
+    echo "JAVA_HOME or -javahome must be set"
+    exit 1
+  else
+    javahome=/maxve/java/${JAVA_HOME##*/}/jre
+  fi
+fi
+
+vmargs="-Djava.home=$javahome -Dmax.ve.fs.table=$fst $vmargs"
+
+if [ "$name" == "" ] ; then
+  if [ "$mainclass" != "" ] ; then
+    name=MaxVE-$mainclass-${USER}-$$
+  else
+    name=MaxVE-${USER}-$$
+  fi
+fi
+if [ "$jar" == "" ] ; then
+  cp="-cp $classpath"
+else
+  cp="-jar $jar"
+fi
+
+javaxtra="$vmargs $cp $mainclass $xtra_args"
+extra="$gukargs $javaxtra"
+if [ ${#extra} -ge 1023 ] ; then
+  argsfile=".$name-args"
+  echo "${#javaxtra}" > $argsfile
+  echo $javaxtra >> $argsfile
+  extra="$gukargs -XX:GVMRamArgs"
+  ramdisk="ramdisk=$argsfile"
+fi
+
+if [ "$echocmd" -eq 1 ] ; then
+  echo xm create -c $native_dir/xmconfigs/domain_config_${config} extra="$extra" name=$name $memory $maxmem $ramdisk
+fi
+if [ "$run" -eq 1 ] ; then
+  export IMAGE_DIR=$native_dir
+  xm create -c $native_dir/xmconfigs/domain_config_${config} extra="$extra" name=$name $memory $maxmem $ramdisk
+fi
+exit 0

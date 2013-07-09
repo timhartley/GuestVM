@@ -1,0 +1,21 @@
+
+syntax: regexp
+^VENative/objs$
+^\.metadata/*
+^\.settings/*
+~$
+syntax: regexp
+\.out$
+syntax: regexp
+^VENative/maxve$
+syntax: glob
+VENative/maxve-*
+VENative/zlibobjs/*
+VENative/fdlibmobjs/*
+YANFS/bin/com/sun/gssapi/dummy/*
+*.class
+VEMain/bin
+VEBase/bin
+AJTrace/bin
+NFSServer/bin
+*.orig

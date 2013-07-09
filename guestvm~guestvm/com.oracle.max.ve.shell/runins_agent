@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# This script runs the Maxine Inspector agent
+
+# Resolve location of this script
+me="${BASH_SOURCE[0]}"
+while [ -h "$me" ]; do
+    me=`readlink -e "$me"`
+done
+# this assumes this script is in bin that is a sibling of xmconfigs
+ve_dir=`dirname $me`
+ve_dir=`dirname $ve_dir`
+# ensure absoluteSys
+ve_dir=`cd $ve_dir; pwd`
+native_dir=$ve_dir/com.oracle.max.ve.native
+
+VE=$ve_dir
+MAX=`cd $ve_dir/../maxine; pwd`
+
+echocmd=0
+port=""
+impl="DB"
+trace=""
+javacmd=`which java`
+
+while [ "$1" != "" ];
+do
+  case $1 in
+  "-echo" )
+    echocmd=1
+    ;;
+  "-port" )
+    shift
+    port="-port=$1"
+    ;;
+  "-db" )
+    ;;
+  "-xg" )
+    impl="XG"
+    ;;
+  "-trace" )
+    shift
+    trace="-trace=$1"
+    ;;
+  "-java" )
+    shift
+    javacmd="$1"
+    ;;
+  * )
+    break
+    ;;
+  esac
+  shift
+done
+
+
+classpath=$MAX/com.oracle.max.tele.vm/bin:$MAX/Tele/bin:$MAX/com.oracle.max.vmdi/bin:$MAX/com.oracle.max.vm/bin:$MAX/com.oracle.max.base/bin:$VE/com.oracle.max.ve.tele/bin
+
+cmd="$javacmd -cp $classpath com.sun.max.tele.channel.agent.InspectorAgent $port -os=MaxVE -os.sub=$impl $trace $*"
+
+if [ "$echocmd" -eq 1 ] ;
+then
+  echo "$cmd"
+fi
+
+$cmd

@@ -1,0 +1,98 @@
+#! /bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# A script that extends the Maxine "max" script to allow Maxine VE to be built
+# Author: Mick Jordan
+
+# Try to find the base directory of the VE code base by using the path of this script
+# Resolve location of this script
+me="${BASH_SOURCE[0]}"
+while [ -h "$me" ]; do
+    me=`readlink -e "$me"`
+done
+pushd . >/dev/null
+cd `dirname "${me}"`
+cd ..
+ve_dir=`pwd`
+popd >/dev/null
+
+# Sanity check: is ${ve_dir}/com.oracle.max.ve.shell/maxve an executable
+if [ ! -x "${ve_dir}/com.oracle.max.ve.shell/maxve" ]; then
+    echo "Can't find Maxine VE code base at '${ve_dir}': '${ve_dir}/com.oracle.max.ve.shell/maxve' does not exist or is not an executable"
+    exit 1
+fi
+
+if [ -z "${extra_projects_dirs}" ]; then
+    export extra_projects_dirs=$ve_dir
+fi
+
+image_override=1
+vm_override=1
+prefix_classpath=""
+specfile=""
+imageargs=""
+
+function run_image_override() {
+  echo "build Maxine Virtual Edition image"
+  pushd $ve_dir/../guk  >/dev/null
+  gmake
+  popd  >/dev/null
+  echo run ${jvm_exe} -cp $(jmax classpath) com.sun.max.vm.hosted.VEBootImageGenerator -trace=1 $prefix_classpath $specfile $imageargs $@
+  run ${jvm_exe} -cp $(jmax classpath) com.sun.max.vm.hosted.VEBootImageGenerator -trace=1 $prefix_classpath $specfile $imageargs $@
+}
+
+function run_vm_override() {
+  echo "vm_override $vm_args"
+  . run $vm_args
+}
+
+while [ "${1:0:1}" = "-" ]; do
+    case $1 in
+    -prefixclasspath )
+      shift
+      prefix_classpath="-prefixclasspath=$1"
+      ;;
+    -specfile )
+      shift
+      specfile="-specfile=$1"
+      ;;
+    -imageargs )
+      shift
+      if [ "$imageargs" = "" ] ;
+      then
+        imageargs="-maxineimageargs=$1"
+      else
+        imageargs="$imageargs $1"
+      fi
+      ;;
+    * )
+      break
+      ;;
+    esac
+    shift
+done
+
+pushd $ve_dir  >/dev/null
+. ../maxine/com.oracle.max.shell/max $@
+popd  >/dev/null
+

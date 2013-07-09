@@ -1,0 +1,146 @@
+#!/bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# This script runs the Maxine inspector (on Linux).
+#
+
+# Resolve location of this script
+me="${BASH_SOURCE[0]}"
+while [ -h "$me" ]; do
+    me=`readlink -e "$me"`
+done
+# this assumes this script is in bin that is a sibling of xmconfigs
+ve_dir=`dirname $me`
+ve_dir=`dirname $ve_dir`
+# ensure absoluteSys
+ve_dir=`cd $ve_dir; pwd`
+native_dir=$ve_dir/com.oracle.max.ve.native
+
+VE=$ve_dir
+MAX=`cd $ve_dir/../maxine; pwd`
+
+echocmd=0
+id=""
+run=1
+trace=1
+dialog=""
+commandfilearg=""
+cp=""
+cpb=""
+vmargs=""
+javacmd=`which java`
+mode="attachwaiting"
+target=""
+location=""
+
+while [ "$1" != "" ];
+do
+#  echo $1
+  case $1 in
+  "-echo" )
+    echocmd=1
+    ;;
+  "-norun" )
+    run=0
+    echocmd=1;
+    ;;
+  "-trace" )
+    shift
+    trace="$1"
+    ;;
+  "-c" )
+    shift
+    commandfilearg="-c=$1"
+    ;;
+  "-id" )
+    shift
+    id="-id=$1"
+    ;;
+  "-classpath" | "-cp" )
+    shift
+    cp="$1"
+    ;;
+  "-cpb" )
+    shift
+    cpb=$1
+    ;;
+  -J* )
+    if [ "$vmargs" = "" ] ;
+    then
+      vmargs=${1/-J/}
+    else
+      vmargs="$vmargs ${1/-J/}"
+    fi
+    ;;
+  "-java" )
+    shift
+    javacmd=$1
+    ;;
+    
+  -tcp* )
+    type=${1/-/}
+    shift
+    target="remote"
+    location=$1
+    if [ $type = "tcp.xga" ] ;
+    then
+        mode="attach"
+    fi
+    ;;
+  "-dump" )
+    shift
+    mode="attach"
+    target="file"
+    location=$1
+    ;;
+  "-view" )
+    mode="image"
+    ;;
+  * )
+    ;;
+  esac
+  shift
+done
+
+classpath=$MAX/com.oracle.max.tele.ins/bin:$MAX/com.oracle.max.tele.ins/jlfgr-1_0.jar:$MAX/com.oracle.max.tele.ins/NB3B.jar:$MAX/com.oracle.max.tele.vm/bin:$MAX/com.oracle.max.vmdi/bin:$MAX/com.oracle.max.ve.tele.jdwp/bin:$MAX/com.oracle.max.vm/bin:$MAX/com.oracle.max.base/bin:$MAX/com.oracle.max.asm/bin:$MAX/com.oracle.max.asmdis/bin:$MAX/com.oracle.max.vm.ext.c1x/bin:$MAX/com.oracle.max.vm.ext.t1x/bin:$MAX/com.oracle.max.cri/bin:$MAX/com.oracle.max.c1x/bin:$MAX/com.oracle.max.elf/bin:$VE/com.oracle.max.ve.tele/bin:$VE/com.oracle.max.ve/bin:$VE/com.oracle.max.ve.base/bin:$VE/com.oracle.max.ve.jnodefs/bin:$VE/com.oracle.max.ve.yanfs/bin:$VE/com.oracle.max.ve.nfsserver/bin:$VE/com.oracle.max.ve.gnucp/bin
+if [ "$cp" != "" ] ;
+then
+  classpath=${classpath}:$cp
+fi
+if [ "$cpb" != "" ] ;
+then
+  classpath=${cpb}:${classpath}
+fi
+cmd="$javacmd -d64 $vmargs -Xbootclasspath/a:$VE/com.oracle.max.ve.jdk/bin -classpath $classpath -Dmax.os=MaxVE -Dmax.os.signalcount=0 -Xms512m -Xmx1024m  com.sun.max.ins.MaxineInspector $id -trace=$trace -vmdir=$MAX/com.oracle.max.vm.native/generated/maxve $commandfilearg -mode=$mode -target=$target -location=$location"
+
+if [ "$echocmd" -eq 1 ] ;
+then
+  echo "$cmd"
+fi
+
+if [ "$run" -eq 1 ] ;
+then
+  $cmd
+fi
+
+exit 0

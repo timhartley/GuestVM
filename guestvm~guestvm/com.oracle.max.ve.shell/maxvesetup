@@ -1,0 +1,46 @@
+#! /bin/bash
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# Script to setup Maxine VE based on properties file values.
+# Should be run from VENative directory
+#
+
+
+    me="${BASH_SOURCE[0]}"
+    while [ -h "$me" ]; do
+        me=`readlink -e "$me"`
+    done
+
+me_dir=`dirname $me`
+propfile=$1
+if [ ! -e $propfile ];
+then
+    echo "Properties does not exist/is inaccessible"
+    exit 1
+fi
+wsroot=`dirname $PWD`
+dfile="maxve-disk1.img"
+cp=$wsroot/com.oracle.max.ve/bin:$wsroot/com.oracle.max.ve.base/bin:$wsroot/com.oracle.max.ve.jnodefs/bin
+mc=com.sun.max.ve.tools.ScratchPadGenerator
+h="-Dmax.ve.logging.handler=com.sun.max.ve.logging.SystemOutHandler -Dmax.ve.logging.level=WARNING"
+java -classpath $cp $h $mc $propfile

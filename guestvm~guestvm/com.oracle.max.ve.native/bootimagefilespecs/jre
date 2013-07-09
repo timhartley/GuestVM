@@ -1,0 +1,43 @@
+#
+# Copyright (c) 2009, 2011, Oracle and/or its affiliates. All rights reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+# This code is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 only, as
+# published by the Free Software Foundation.
+#
+# This code is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details (a copy is included in the LICENSE file that
+# accompanied this code).
+#
+# You should have received a copy of the GNU General Public License version
+# 2 along with this work; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+# or visit www.oracle.com if you need additional information or have any
+# questions.
+#
+# Include the JRE in the image file system
+
+include prefix
+path ${java.home}/../lib/tools.jar /jdk${java.version}/lib/tools.jar
+path ${java.home}/lib/rt.jar /jdk${java.version}/jre/lib/rt.jar
+path ${java.home}/lib/jce.jar /jdk${java.version}/jre/lib/jce.jar
+path ${java.home}/lib/jsse.jar /jdk${java.version}/jre/lib/jsse.jar
+path ${java.home}/lib/resources.jar /jdk${java.version}/jre/lib/resources.jar
+path ${java.home}/lib/charsets.jar /jdk${java.version}/jre/lib/charsets.jar
+path ${java.home}/lib/management-agent.jar /jdk${java.version}/jre/li/management-agent.jar
+path ${java.home}/lib/calendars.properties /jdk${java.version}/jre/lib/calendars.properties
+path ${java.home}/lib/content-types.properties /jdk${java.version}/jre/lib/content-types.properties
+path ${java.home}/lib/flavormap.properties /jdk${java.version}/jre/lib/flavormap.properties
+path ${java.home}/lib/logging.properties /jdk${java.version}/jre/lib/logging.properties
+path ${java.home}/lib/net.properties /jdk${java.version}/jre/lib/net.properties
+path ${java.home}/lib/psfontj2d.properties /jdk${java.version}/jre/lib/psfontj2d.properties 
+path ${java.home}/lib/sound.properties /jdk${java.version}/jre/lib/sound.properties
+path ${java.home}/lib/security /jdk${java.version}/jre/lib/security
+path ${java.home}/lib/zi /jdk${java.version}/jre/lib/zi
+path ${java.home}/lib/management /jdk${java.version}/jre/lib/management
+path ${java.home}/lib/ext /jdk${java.version}/jre/lib/ext
