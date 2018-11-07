@@ -26,6 +26,7 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import com.sun.max.annotate.*;
 import com.sun.max.lang.*;
+import com.sun.max.unsafe.*;
 import com.sun.max.ve.fs.DefaultReadWriteFileSystemImpl;
 import com.sun.max.ve.fs.ErrorDecoder;
 import com.sun.max.ve.fs.VirtualFileSystem;
@@ -106,7 +107,8 @@ public class PipeFileSystem extends DefaultReadWriteFileSystemImpl implements Vi
         @INLINE
         final byte consumeOne() {
             final byte result = _buffer[_readIndex];
-            _readIndex = Unsigned.irem(_readIndex + 1, _buffer.length);
+            //_readIndex = Unsigned.irem(_readIndex + 1, _buffer.length);
+            _readIndex = Address.fromUnsignedInt(_readIndex + 1).remainder(_buffer.length);
             _available--;
             return result;
         }
@@ -114,7 +116,8 @@ public class PipeFileSystem extends DefaultReadWriteFileSystemImpl implements Vi
         @INLINE
         final void produceOne(byte b) {
             _buffer[_writeIndex] = b;
-            _writeIndex = Unsigned.irem(_writeIndex + 1, _buffer.length);
+            //_writeIndex = Unsigned.irem(_writeIndex + 1, _buffer.length);
+            _writeIndex = Address.fromUnsignedInt(_writeIndex + 1).remainder(_buffer.length);
             _available++;
         }
     }

@@ -22,12 +22,12 @@
  */
 package com.sun.max.ve.jdk;
 
+import static com.sun.max.vm.intrinsics.MaxineIntrinsicIDs.*;
+
 import com.sun.max.annotate.*;
 import com.sun.max.ve.error.*;
-import com.sun.max.vm.actor.holder.ClassActor;
-import com.sun.max.vm.heap.Heap;
-import com.sun.cri.bytecode.INTRINSIC;
-import static com.sun.cri.bytecode.Bytecodes.*;
+import com.sun.max.vm.actor.holder.*;
+import com.sun.max.vm.heap.*;
 
 /**
  * MaxVE also uses a UnixFileSystem object as the FileSystem.
@@ -40,10 +40,10 @@ import static com.sun.cri.bytecode.Bytecodes.*;
 public final class JDK_java_io_FileSystem {
 
     private static Object _singleton;
-    
+
     @INTRINSIC(UNSAFE_CAST)
     static native JDK_java_io_FileSystem asThis(Object t);
-   
+
     @ALIAS(declaringClassName = "java.io.UnixFileSystem", name="<init>")
     private native void init();
 

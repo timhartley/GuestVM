@@ -204,7 +204,7 @@ public final class SiblingFileSystem extends UnimplementedFileSystemImpl impleme
 
     @Override
     public int readBytes(int fd, byte[] bytes, int offset, int length, long fileOffset) {
-        final Pointer nativeBytes = Intrinsics.stackAllocate(4096);
+        final Pointer nativeBytes = Intrinsics.alloca(4096, false /* ??? TODO */);
         int left = length;
         while (left > 0) {
             final int toDo = left > X64VM.PAGE_SIZE ? X64VM.PAGE_SIZE : left;
@@ -224,10 +224,10 @@ public final class SiblingFileSystem extends UnimplementedFileSystemImpl impleme
     public int write(int fd, int b, long fileOffset) {
         return SiblingFileSystemNatives.write(_handle, fd, b, fileOffset);
     }
-    
+
     @Override
     public int writeBytes(int fd, byte[] bytes, int offset, int length, long fileOffset) {
-        final Pointer nativeBytes = Intrinsics.stackAllocate(4096);
+        final Pointer nativeBytes = Intrinsics.alloca(4096, false /* ??? TODO */);
         int left = length;
         while (left > 0) {
             final int toDo = left > X64VM.PAGE_SIZE ? X64VM.PAGE_SIZE : left;

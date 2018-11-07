@@ -56,7 +56,7 @@ public class SpinLockedRunQueue {
      * Lock and disable interrupts (events).
      * @return the flags needed to unlock
      */
-    @INLINE(override = true)
+    @INLINE
     public void lock() {
         _lock.lock();
     }
@@ -65,7 +65,7 @@ public class SpinLockedRunQueue {
      * Unlock and enable interrupts (events).
      * @param flags from the matching lock call
      */
-    @INLINE(override = true)
+    @INLINE
     public void unlock() {
         _lock.unlock();
     }

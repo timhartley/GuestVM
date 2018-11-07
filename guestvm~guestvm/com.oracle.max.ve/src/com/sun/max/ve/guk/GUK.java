@@ -139,7 +139,7 @@ public final class GUK {
     }
 
     public static void initialize() {
-        final Word isCrashingMethodAddress = CompilationScheme.Static.getCurrentTargetMethod(ClassActor.fromJava(GUK.class).findLocalStaticMethodActor(SymbolTable.makeSymbol("is_crashing"))).getEntryPoint(CallEntryPoint.C_ENTRY_POINT);
+        final Word isCrashingMethodAddress = ClassActor.fromJava(GUK.class).findLocalStaticMethodActor(SymbolTable.makeSymbol("is_crashing")).makeTargetMethod().getEntryPoint(CallEntryPoint.C_ENTRY_POINT).toAddress();
         guk_register_is_crashing_method(isCrashingMethodAddress);
     }
 

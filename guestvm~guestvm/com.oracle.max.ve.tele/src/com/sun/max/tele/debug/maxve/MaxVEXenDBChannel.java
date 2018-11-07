@@ -28,9 +28,7 @@ import java.util.List;
 
 import com.sun.max.tele.MaxWatchpoint.WatchpointSettings;
 import com.sun.max.tele.TeleVM;
-import com.sun.max.tele.debug.ProcessState;
-import com.sun.max.tele.debug.TeleNativeThread;
-import com.sun.max.tele.debug.TeleWatchpoint;
+import com.sun.max.tele.debug.*;
 import com.sun.max.tele.memory.TeleFixedMemoryRegion;
 import com.sun.max.unsafe.Address;
 import com.sun.max.unsafe.Pointer;
@@ -164,7 +162,7 @@ public final class MaxVEXenDBChannel {
         return channelProtocol.suspend(threadId);
     }
 
-    public static synchronized boolean activateWatchpoint(int domainId, TeleWatchpoint teleWatchpoint) {
+    public static synchronized boolean activateWatchpoint(int domainId, VmWatchpoint teleWatchpoint) {
         final WatchpointSettings settings = teleWatchpoint.getSettings();
         return channelProtocol.activateWatchpoint(teleWatchpoint.memoryRegion().start().toLong(), teleWatchpoint.memoryRegion().nBytes(), true, settings.trapOnRead, settings.trapOnWrite, settings.trapOnExec);
     }

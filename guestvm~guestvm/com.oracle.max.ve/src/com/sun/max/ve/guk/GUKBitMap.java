@@ -24,7 +24,6 @@ package com.sun.max.ve.guk;
 
 import com.sun.max.annotate.*;
 import com.sun.max.unsafe.*;
-import com.sun.max.lang.Unsigned;
 
 
 public class GUKBitMap {
@@ -33,7 +32,9 @@ public class GUKBitMap {
 
     @INLINE
     public static boolean isAllocated(Pointer bitMap, long entry) {
-        final long mapWord = bitMap.getLong((int) Unsigned.ldiv(entry, ENTRIES_PER_MAPWORD));
+        long l = Address.fromLong(entry).dividedBy(Address.fromLong(ENTRIES_PER_MAPWORD)).toLong();
+        final long mapWord = bitMap.getLong((int)l);
+
         return (mapWord & (1L << (entry & MAPWORD_MASK))) != 0;
     }
 

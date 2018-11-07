@@ -23,7 +23,7 @@
 package jtt.jvmni;
 
 import com.sun.max.annotate.*;
-import com.sun.max.vm.jni.JVMFunctions;
+import com.sun.max.vm.jni.*;
 
 // Checkstyle: stop method name check
 @SuppressWarnings("unused")
@@ -32,6 +32,6 @@ final class jtt_jvmni_JVM_GetClassContext01 {
 
     @SUBSTITUTE
     private static Class<?>[] call() {
-        return JVMFunctions.GetClassContext();
+        return VMFunctions.getClassContext();
     }
 }

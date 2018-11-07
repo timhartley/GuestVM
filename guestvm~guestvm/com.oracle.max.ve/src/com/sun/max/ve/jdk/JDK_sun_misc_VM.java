@@ -23,7 +23,6 @@
 package com.sun.max.ve.jdk;
 
 import com.sun.max.annotate.*;
-import com.sun.max.vm.jni.JVMFunctions;
 
 /**
  * Substitutions for the @see sun.misc.VM class.
@@ -51,8 +50,8 @@ final class JDK_sun_misc_VM {
         final Thread.State[] ts = Thread.State.values();
         assert ts.length == vmThreadStateValues.length;
         for (int i = 0; i < vmThreadStateValues.length; i++) {
-            vmThreadStateValues[i] = JVMFunctions.GetThreadStateValues(i);
-            vmThreadStateNames[i] = JVMFunctions.GetThreadStateNames(i, vmThreadStateValues[i]);
+            vmThreadStateValues[i] = new int[]{i};
+            vmThreadStateNames[i] = new String[] {Thread.State.values()[i].name()};
         }
     }
 }

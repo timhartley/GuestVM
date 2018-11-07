@@ -33,10 +33,10 @@ import com.sun.max.annotate.*;
  */
 public abstract class OPSpinLock extends SpinLock {
 
-    @INLINE(override = true)
+    @INLINE
     public abstract void disablePreemption();
 
-    @INLINE(override = true)
+    @INLINE
     public abstract void enablePreemption();
 
 }

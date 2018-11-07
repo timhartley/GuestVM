@@ -36,7 +36,8 @@ void *maxine_log_dlsym(const char *symbol) {
     else if (strcmp(symbol, "log_print_word") == 0) return log_print_word;
     else if (strcmp(symbol, "log_print_boolean") == 0) return log_print_boolean;
     else if (strcmp(symbol, "log_print_char") == 0) return log_print_char;
-    else if (strcmp(symbol, "log_print_buffer") == 0) return log_print_buffer;
+/*    else if (strcmp(symbol, "log_print_buffer") == 0) return log_print_buffer; */
+    else if (strcmp(symbol, "log_print_buffer") == 0) return log_print_symbol; 
     else if (strcmp(symbol, "log_print_newline") == 0) return log_print_newline;
     else if (strcmp(symbol, "log_print_float") == 0) return log_print_float;
     else if (strcmp(symbol, "log_print_double") == 0) return log_print_double;

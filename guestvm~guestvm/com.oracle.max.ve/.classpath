@@ -12,5 +12,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/com.oracle.max.ve.jdk"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/com.oracle.max.vm"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/com.oracle.max.ve.yanfs"/>
+	<classpathentry kind="src" path="/com.oracle.max.vm.tests"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

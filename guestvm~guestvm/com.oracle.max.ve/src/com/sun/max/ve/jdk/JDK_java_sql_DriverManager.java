@@ -25,7 +25,7 @@ package com.sun.max.ve.jdk;
 import java.sql.*;
 
 import com.sun.max.annotate.*;
-import com.sun.max.vm.jni.JVMFunctions;
+import sun.reflect.*;
 
 /**
  * Substitutions for @see java.sql.DriverManager.
@@ -36,7 +36,7 @@ final class JDK_java_sql_DriverManager {
 
     @SUBSTITUTE
     private static ClassLoader getCallerClassLoader() {
-        final Class<?> caller = JVMFunctions.GetCallerClass(3);
+        final Class <?> caller = Reflection.getCallerClass(5);
         return caller == null ? null : caller.getClassLoader();
     }
 }

@@ -189,7 +189,7 @@ public final class Tick extends Thread {
     private static class TickStackTraceVisitor extends StackTraceVisitor {
 
         TickStackTraceVisitor() {
-            super(null, _maxDepth);
+            super(null);
         }
         @Override
         public boolean add(ClassMethodActor classMethodActor, int sourceLineNumber) {

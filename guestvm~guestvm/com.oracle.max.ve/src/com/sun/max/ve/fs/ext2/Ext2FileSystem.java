@@ -679,14 +679,14 @@ public final class Ext2FileSystem extends UnimplementedFileSystemImpl implements
      * that locking is not available and proceeds without it.
      */
 
-    @Override
-    public int lock0(int fd, boolean blocking, long pos, long size, boolean shared) throws IOException {
-        if (shared) {
-            return FileChannelImpl.LOCKED;
-        } else {
-            return FileChannelImpl.RET_EX_LOCK;
-        }
-    }
+//    @Override
+//    public int lock0(int fd, boolean blocking, long pos, long size, boolean shared) throws IOException {
+//        if (shared) {
+//            return FileChannelImpl.LOCKED;
+//        } else {
+//            return FileChannelImpl.RET_EX_LOCK;
+//        }
+//    }
 
     @Override
     public void release0(int fd, long pos, long size) throws IOException {

@@ -25,6 +25,7 @@ package com.sun.max.ve.jdk;
 import java.util.Properties;
 
 import com.sun.max.annotate.*;
+import com.sun.max.vm.*;
 import com.sun.max.vm.jni.*;
 
 /**
@@ -42,6 +43,10 @@ import com.sun.max.vm.jni.*;
 final class JDK_sun_misc_VMSupport {
     @SUBSTITUTE
     private static Properties initAgentProperties(Properties props) {
-        return JVMFunctions.InitAgentProperties(props);
+        // sun.jvm.args, sun.jvm.flags, sun.java.command
+        props.put("sun.jvm.args", VMOptions.getVmArguments());
+        props.put("sun.jvm.flags", "");
+        props.put("sun.java.command", VMOptions.mainClassAndArguments());
+        return props;
     }
 }

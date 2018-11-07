@@ -24,7 +24,7 @@ package test.java.lang;
 
 /**
  * A test that trying to load native libraries does not abort the VM.
- * 
+ *
  * @author Mick Jordan
  *
  */
@@ -49,11 +49,12 @@ public class LoadLibraryTest {
             if (lib == null) {
                 System.out.println("usage: [s] lib");
             } else {
-                if (secure) {
-                    java.security.AccessController.doPrivileged(new sun.security.action.LoadLibraryAction(lib));
-                } else {
-                    System.loadLibrary(lib);
-                }
+                System.loadLibrary(lib);
+//                if (secure) {
+//                    java.security.AccessController.doPrivileged(new sun.security.action.LoadLibraryAction(lib));
+//                } else {
+//                    System.loadLibrary(lib);
+//                }
             }
         } catch (Exception ex) {
             System.out.println(ex);

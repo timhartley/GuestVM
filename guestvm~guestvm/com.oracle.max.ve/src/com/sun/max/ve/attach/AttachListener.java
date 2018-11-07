@@ -100,8 +100,11 @@ public final class AttachListener implements Runnable {
                                 error = '1';
                             } else {
                                 final URL url = new URL("file://" + jarPath);
-                                Launcher.addURLToAppClassLoader(url);
-                                JavaRunScheme.invokeAgentMethod(url, agentClassName, "agentmain", options);
+                                VEError.unimplemented("Implement me");
+//                                ClassPath.
+//                                Launcher.addURLToAppClassLoader(url);
+//                                JavaRunScheme.a
+//                                JavaRunScheme.invokeAgentMethod(url, agentClassName, "agentmain", options);
                             }
                         } catch (Exception ex) {
                             System.out.println(ex);

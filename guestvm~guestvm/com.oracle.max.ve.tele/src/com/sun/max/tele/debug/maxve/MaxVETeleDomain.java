@@ -45,7 +45,7 @@ public class MaxVETeleDomain extends TeleProcess {
     protected MaxVETeleDomain(TeleVM teleVM, Platform platform, int id) {
         super(teleVM, platform, ProcessState.STOPPED);
         this.domainId = id;
-        dataAccess = new PageDataAccess(this, platform.dataModel);
+        dataAccess = new PageDataAccess(teleVM, this, platform.dataModel);
         MaxVEXenDBChannel.attach(this, id);
     }
 
@@ -129,12 +129,12 @@ public class MaxVETeleDomain extends TeleProcess {
     }
 
     @Override
-    protected boolean activateWatchpoint(TeleWatchpoint teleWatchpoint) {
+    protected boolean activateWatchpoint(VmWatchpoint teleWatchpoint) {
         return MaxVEXenDBChannel.activateWatchpoint(domainId, teleWatchpoint);
     }
 
     @Override
-    protected boolean deactivateWatchpoint(TeleWatchpoint teleWatchpoint) {
+    protected boolean deactivateWatchpoint(VmWatchpoint teleWatchpoint) {
         return MaxVEXenDBChannel.deactivateWatchpoint(domainId, teleWatchpoint.memoryRegion());
     }
 

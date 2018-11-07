@@ -31,23 +31,22 @@ import com.sun.max.unsafe.Size;
 import com.sun.max.ve.error.VEError;
 import com.sun.max.vm.actor.holder.ClassActor;
 import com.sun.max.vm.heap.Heap;
-
+import static com.sun.max.vm.intrinsics.MaxineIntrinsicIDs.*;
 import static com.sun.cri.bytecode.Bytecodes.*;
 
-import com.sun.cri.bytecode.INTRINSIC;
 
 /**
  * A {@link PageDirectByteBuffer} is a custom variant of {@link DirectByteBuffer} for use
  * in VE for buffers that are multiples of the page size and have a lifetime that matches the VM.
  * They are allocated from virtual memory, whereas {@link DirectByteBuffer} uses malloc
  * memory and over-allocates in order to guarantee page alignment, resulting
- * in 3 pages allocated when 1 is requested. 
- * 
+ * in 3 pages allocated when 1 is requested.
+ *
  * We invoke the private constructor provided for JNI_NewDirectByteBuffer using
  * Maxine's {@link ALIAS} mechanism. No "cleaner" is set up for such buffers
  * so they cannot be reclaimed.
- * 
- * 
+ *
+ *
  * @author Mick Jordan
  *
  */
@@ -56,12 +55,12 @@ public class PageDirectByteBuffer {
 
     @ALIAS(declaringClassName="java.nio.DirectByteBuffer", name="<init>")
     private native void init(long addr, int cap);
-    
+
     @INTRINSIC(UNSAFE_CAST) static native PageDirectByteBuffer asPageDirectByteBuffer(Object obj);
     @INTRINSIC(UNSAFE_CAST) public static native ByteBuffer asByteBuffer(Object obj);
-    
+
     private static ClassActor directByteBufferActor;
-    
+
     static {
         try {
             directByteBufferActor = ClassActor.fromJava(Class.forName("java.nio.DirectByteBuffer"));
@@ -70,7 +69,7 @@ public class PageDirectByteBuffer {
             ProgramError.unexpected("can't load DirectByteBuffer", ex);
         }
     }
-    
+
     public static ByteBuffer allocateDirect(int cap) {
         final ByteBuffer byteBuffer = asByteBuffer(Heap.createTuple(directByteBufferActor.dynamicHub()));
         PageDirectByteBuffer thisByteBuffer = asPageDirectByteBuffer(byteBuffer);

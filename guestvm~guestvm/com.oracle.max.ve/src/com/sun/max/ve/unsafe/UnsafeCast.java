@@ -22,15 +22,16 @@
  */
 package com.sun.max.ve.unsafe;
 
-import static com.sun.cri.bytecode.Bytecodes.*;
+import static com.sun.max.vm.intrinsics.MaxineIntrinsicIDs.*;
 
 import java.net.*;
 
-import com.sun.cri.bytecode.INTRINSIC;
+import com.sun.max.annotate.*;
+
 
 /**
  * Encapsulates the use of unsafe casts in VE, similar to {@see com.sun.max.unsafeUnSafe}.
- * 
+ *
  * @author Mick Jordan
  *
  */

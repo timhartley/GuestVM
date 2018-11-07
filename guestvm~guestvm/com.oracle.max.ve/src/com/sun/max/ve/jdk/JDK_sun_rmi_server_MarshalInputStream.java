@@ -33,9 +33,9 @@ import com.sun.max.vm.jni.*;
 
 @METHOD_SUBSTITUTIONS(sun.rmi.server.MarshalInputStream.class)
 final class JDK_sun_rmi_server_MarshalInputStream {
-    @SuppressWarnings("unused")
-    @SUBSTITUTE
-    private static ClassLoader latestUserDefinedLoader() {
-        return JVMFunctions.LatestUserDefinedLoader();
-    }
+//    @SuppressWarnings("unused")
+//    @SUBSTITUTE
+//    private static ClassLoader latestUserDefinedLoader() {
+//        return JVMFunctions.LatestUserDefinedLoader();
+//    }
 }

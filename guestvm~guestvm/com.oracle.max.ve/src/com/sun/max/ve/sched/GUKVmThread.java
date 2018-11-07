@@ -22,13 +22,12 @@
  */
 package com.sun.max.ve.sched;
 
-import com.sun.max.ve.guk.*;
-import com.sun.max.vm.thread.*;
+import static com.sun.max.vm.intrinsics.MaxineIntrinsicIDs.*;
+
 import com.sun.max.annotate.*;
 import com.sun.max.unsafe.*;
-import static com.sun.cri.bytecode.Bytecodes.*;
-import com.sun.cri.bytecode.*;
-
+import com.sun.max.ve.guk.*;
+import com.sun.max.vm.thread.*;
 /**
  * A subclass of VmThread that is tied to the Guest VM microkernel (GUK) native thread.
  *

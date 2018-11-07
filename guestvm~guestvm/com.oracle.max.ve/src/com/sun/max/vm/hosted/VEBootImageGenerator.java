@@ -29,9 +29,7 @@ import com.sun.max.io.*;
 import com.sun.max.io.Streams.*;
 import com.sun.max.program.*;
 import com.sun.max.program.option.*;
-import com.sun.max.ve.fs.image.BootImageFileSystem;
-import com.sun.max.vm.hosted.BootImageGenerator;
-
+import com.sun.max.ve.fs.image.*;
 import test.com.sun.max.vm.compiler.JavaTester;
 
 /**

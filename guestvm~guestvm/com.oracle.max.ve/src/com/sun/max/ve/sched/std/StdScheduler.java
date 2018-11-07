@@ -102,14 +102,14 @@ final class StdScheduler extends GUKUpcallHandler {
 
         public void run(Pointer tla) {
             final VmThread vmThread = VmThread.fromTLA(tla);
-            if (vmThread.isGCThread()) {
-                int timeSlice = DEFAULT_GCTHREAD_TIMESLICE;
-                final String p = System.getProperty(GCTHREAD_TIMESLICE_PROPERTY);
-                if (p != null) {
-                    timeSlice = Integer.parseInt(p);
-                }
-                GUKScheduler.setThreadTimeSlice(vmThread, timeSlice);
-            }
+//            if (vmThread.isGCThread()) {
+//                int timeSlice = DEFAULT_GCTHREAD_TIMESLICE;
+//                final String p = System.getProperty(GCTHREAD_TIMESLICE_PROPERTY);
+//                if (p != null) {
+//                    timeSlice = Integer.parseInt(p);
+//                }
+//                GUKScheduler.setThreadTimeSlice(vmThread, timeSlice);
+//            }
         }
     }
 

@@ -22,24 +22,23 @@
  */
 package com.sun.max.ve.jdk;
 
-import static com.sun.cri.bytecode.Bytecodes.*;
+import static com.sun.max.vm.intrinsics.MaxineIntrinsicIDs.*;
 
-import com.sun.cri.bytecode.INTRINSIC;
-
+import com.sun.max.annotate.*;
 
 /**
  * Collect all the unsafe casts used by clients of {@link ALIAS} methods in the JDK substitution classes.
- * 
+ *
  * @author Mick Jordan
  *
  */
 final class AliasCast {
-    @INTRINSIC(UNSAFE_CAST) static native JDK_java_io_FileDescriptor asJDK_java_io_FileDescriptor(Object obj);    
+    @INTRINSIC(UNSAFE_CAST) static native JDK_java_io_FileDescriptor asJDK_java_io_FileDescriptor(Object obj);
     @INTRINSIC(UNSAFE_CAST) static native JDK_java_io_FileInputStream asJDK_java_io_FileInputStream(Object obj);
-    @INTRINSIC(UNSAFE_CAST) static native JDK_java_io_FileOutputStream asJDK_java_io_FileOutputStream(Object obj);    
-    @INTRINSIC(UNSAFE_CAST) static native JDK_java_io_RandomAccessFile asJDK_java_io_RandomAccessFile(Object obj);    
-    @INTRINSIC(UNSAFE_CAST) static native JDK_java_net_PlainDatagramSocketImpl asJDK_java_net_PlainDatagramSocketImpl(Object obj);    
-    @INTRINSIC(UNSAFE_CAST) static native JDK_java_net_PlainSocketImpl asJDK_java_net_PlainSocketImpl(Object obj);    
+    @INTRINSIC(UNSAFE_CAST) static native JDK_java_io_FileOutputStream asJDK_java_io_FileOutputStream(Object obj);
+    @INTRINSIC(UNSAFE_CAST) static native JDK_java_io_RandomAccessFile asJDK_java_io_RandomAccessFile(Object obj);
+    @INTRINSIC(UNSAFE_CAST) static native JDK_java_net_PlainDatagramSocketImpl asJDK_java_net_PlainDatagramSocketImpl(Object obj);
+    @INTRINSIC(UNSAFE_CAST) static native JDK_java_net_PlainSocketImpl asJDK_java_net_PlainSocketImpl(Object obj);
     @INTRINSIC(UNSAFE_CAST) static native JDK_java_net_Inet4AddressImpl asJDK_java_net_Inet4AddressImpl(Object obj);
     @INTRINSIC(UNSAFE_CAST) static native JDK_java_net_NetworkInterface asJDK_java_net_NetworkInterface(Object obj);
     @INTRINSIC(UNSAFE_CAST) static native JDK_sun_nio_ch_FileChannelImpl asJDK_sun_nio_ch_FileChannelImpl(Object obj);

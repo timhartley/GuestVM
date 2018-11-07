@@ -50,9 +50,9 @@ public class JDK_java_io_ObjectInputStream {
                     int ndoubles) {
 
     }
-
-    @SUBSTITUTE
-    private static ClassLoader latestUserDefinedLoader() {
-        return JVMFunctions.LatestUserDefinedLoader();
-    }
+// Does this need substituting here ?
+//    @SUBSTITUTE
+//    private static ClassLoader latestUserDefinedLoader() {
+//        return JVMFunctions.LatestUserDefinedLoader();
+//    }
 }

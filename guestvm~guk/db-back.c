@@ -1036,7 +1036,7 @@ static domid_t get_self_id(void)
     domid_t ret;
 
     BUG_ON(xenbus_read(XBT_NIL, "domid", &dom_id));
-    sscanf(dom_id, "%d", &ret);
+    sscanf(dom_id, "%hd", &ret);
 
     return ret;
 }

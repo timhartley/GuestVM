@@ -29,7 +29,6 @@ import com.sun.max.ve.guk.x64.*;
 import com.sun.max.ve.memory.HeapPool;
 import com.sun.max.vm.Log;
 import com.sun.max.vm.VMConfiguration;
-import com.sun.max.lang.Unsigned;
 
 /**
  * An interface to the physical page allocation subsystem in the microkernel.
@@ -227,7 +226,8 @@ public final class GUKPagePool  implements Runnable {
      */
     @INLINE
     private static long toPages(long n) {
-        return Unsigned.ldiv(n, 4096);
+        //return Unsigned.ldiv(n, 4096);
+        return Address.fromLong(n).dividedBy(Address.fromLong(4096)).toLong();
     }
 
     /**
@@ -247,7 +247,8 @@ public final class GUKPagePool  implements Runnable {
      */
     @INLINE
     private static long toMB(long n) {
-        return Unsigned.ldiv(toBytes(n), 1024 * 1024);
+        //return Unsigned.ldiv(toBytes(n), 1024 * 1024);
+        return Address.fromLong(n).dividedBy(Address.fromLong(1024 * 1024)).toLong();
     }
 
     @CONSTANT_WHEN_NOT_ZERO

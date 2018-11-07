@@ -37,12 +37,12 @@ kernel = "guk.gz"
 memory = 32
 maxmem = 128
 
-vcpus = os.environ.get("VCPUS")
+vcpus = 1
 
-if os.environ.get("BRIDGE") != None :
-    vif=['bridge=' + os.environ.get("BRIDGE")]
+#if os.environ.get("BRIDGE") != None :
+#    vif=['bridge=' + os.environ.get("BRIDGE")]
 
 # A name for your domain. All domains must have different names.
-name = "GUK-" + os.environ.get("USER")
+name = "GUK-MAXINE"
 
 on_crash = 'destroy'

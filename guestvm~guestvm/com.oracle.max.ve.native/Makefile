@@ -52,13 +52,14 @@ TARGET_ARCH = x86_64
 XEN_INTERFACE_VERSION := 0x00030203
 
 PROJECT_ROOT = ../..
-GUK_ROOT = $(PROJECT_ROOT)/guk
+GUK_ROOT = $(PROJECT_ROOT)/guestvm~guk
 MAXINE_NATIVE = $(PROJECT_ROOT)/maxine/com.oracle.max.vm.native
-MAXINE_SUBSTRATE = $(MAXINE_NATIVE)/generated/maxve
+MAXINE_SUBSTRATE = $(MAXINE_NATIVE)/generated/linux
 MAXINE_JNI = $(MAXINE_NATIVE)/jni
 MAXINE_SHARE = $(MAXINE_NATIVE)/share
 MAXINE_INCL = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(HOSTOS_LC) -I$(MAXINE_NATIVE)/share -I$(MAXINE_NATIVE)/platform -I$(MAXINE_NATIVE)/substrate
 LIB_MAXINE = libjvm.a
+#LIB_MAXINE = libjvm.so
 
 FS_DIR = $(GUK_ROOT)/tools/fs-back
 DB_DIR = $(GUK_ROOT)/tools/db-front
@@ -76,7 +77,7 @@ GCC_INCLUDE+=-I${GCC_BASE}include-fixed
 endif
 
 # NB. '-Wcast-qual' is nasty, so I omitted it.
-CFLAGS := -fno-builtin -Wall -Werror -Wredundant-decls -Wno-format -nostdinc -I$(GCC_INCLUDE)
+CFLAGS := -fno-builtin -Wall -Wno-error -Wredundant-decls -Wno-format -nostdinc -I$(GCC_INCLUDE)
 CFLAGS += -Wstrict-prototypes -Wnested-externs -Wpointer-arith -Winline
 CFLAGS += -ffixed-r14
 CFLAGS += -D__XEN_INTERFACE_VERSION__=$(XEN_INTERFACE_VERSION)

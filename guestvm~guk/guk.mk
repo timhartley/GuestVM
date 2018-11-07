@@ -42,7 +42,7 @@ endif
 # use -nostdinc to avoid name clashes, but include gcc standard headers
 DEF_CFLAGS := -fno-builtin -nostdinc $(GCC_INCLUDE)
 DEF_CFLAGS += $(call cc-option,$(CC),-fno-stack-protector,)
-DEF_CFLAGS += -Wall -Werror -Wredundant-decls -Wno-format
+DEF_CFLAGS += -Wall -Wno-error -Wredundant-decls -Wno-format
 DEF_CFLAGS += -Wstrict-prototypes -Wnested-externs -Wpointer-arith -Winline
 DEF_CFLAGS += -D__XEN_INTERFACE_VERSION__=$(XEN_INTERFACE_VERSION)
 DEF_CFLAGS += -DCONFIG_PREEMPT -DCONFIG_SMP

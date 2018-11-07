@@ -28,6 +28,7 @@ import com.sun.max.vm.actor.holder.*;
 import com.sun.max.vm.actor.member.*;
 import com.sun.max.vm.classfile.constant.*;
 import com.sun.max.vm.jni.*;
+import com.sun.max.vm.thread.*;
 
 /**
  * Implementation of native methods for java.lang.SecirityManager.
@@ -58,7 +59,7 @@ public class JDK_java_lang_SecurityManager {
     @SUBSTITUTE
     private Class[] getClassContext() {
         check(this);
-        return JVMFunctions.GetClassContext();
+        return VMFunctions.getClassContext();
     }
 
     @SUBSTITUTE

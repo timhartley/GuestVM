@@ -34,7 +34,8 @@ import com.sun.max.annotate.*;
  *
  */
 
-@METHOD_SUBSTITUTIONS(LoadLibraryAction.class)
+// this functionality moved to System.loadLibrary
+//@METHOD_SUBSTITUTION(LoadLibraryAction.class)
 public class JDK_sun_security_action_LoadLibraryAction {
 
     @SUBSTITUTE
