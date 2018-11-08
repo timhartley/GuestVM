@@ -31,7 +31,7 @@
 #include <string.h>
 #include <assert.h>
 #include <xenctrl.h>
-#include <xs.h>
+#include <xenstore.h>
 #include "fsif.h"
 #include "fs-backend.h"
 

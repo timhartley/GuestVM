@@ -34,7 +34,7 @@ INCLUDES += -I.
 IBIN         = exec-backend 
 INST_DIR     = /usr/sbin
 
-CFLAGS   += -Werror
+CFLAGS   += -Wno-error
 CFLAGS   += -Wno-unused
 CFLAGS   += -fno-strict-aliasing
 CFLAGS   += -I $(XEN_LIBXC) -I $(XEN_XENSTORE)
@@ -47,8 +47,8 @@ DEPS      = .*.d
 
 LIBS      := -L.
 LIBS      += -L$(XEN_LIBXC)
-LIBS      += -lxenctrl -lpthread -lrt 
-LIBS      += -L$(XEN_XENSTORE) -lxenstore
+LIBS      += -lxenctrl
+LIBS      += -L$(XEN_XENSTORE) -lxenstore -lpthread -lrt
 
 OBJS	  := exec-xenbus.o
 
@@ -59,7 +59,7 @@ links:	$(ARCH_LINKS)
 	[ -e xen ] || ln -sf $(XEN_ROOT)/xen/include/public xen
 
 exec-backend: $(OBJS) exec-backend.c
-	$(CC) $(CFLAGS) -o exec-backend $(OBJS) $(LIBS) exec-backend.c
+	$(CC) $(CFLAGS) -o exec-backend exec-backend.c $(OBJS) $(LIBS)
 
 install: all
 	$(INSTALL_PROG) $(IBIN) $(DESTDIR)$(INST_DIR)

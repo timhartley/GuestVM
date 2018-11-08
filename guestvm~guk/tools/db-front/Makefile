@@ -52,10 +52,10 @@ LIB          = libguk_db.so
 MAJOR 		= 1.0
 MINOR 		= 0
 
-CFLAGS   += -Werror
+CFLAGS   += -Wno-error -DXC_WANT_COMPAT_GNTTAB_API -DXC_WANT_COMPAT_EVTCHN_API -DXC_WANT_COMPAT_GNTTAB_API
 CFLAGS   += -Wno-unused
-CFLAGS   += -fno-strict-aliasing
-CFLAGS   += -I $(XEN_ROOT)/tools/include -I $(XEN_LIBXC) -I $(XEN_XENSTORE)
+CFLAGS   += -fno-strict-aliasing -shared
+CFLAGS   += -I $(XEN_ROOT)/tools/include -I $(XEN_LIBXC) -I $(XEN_XENSTORE) -I../../include/
 CFLAGS   += $(INCLUDES)
 CFLAGS   += -D_GNU_SOURCE
 

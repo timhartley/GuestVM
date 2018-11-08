@@ -44,7 +44,7 @@ INCLUDES += -I.
 IBIN         = fs-backend 
 INST_DIR     = /usr/sbin
 
-CFLAGS   += -Werror
+CFLAGS   += -Wno-error
 CFLAGS   += -Wno-unused
 CFLAGS   += -fno-strict-aliasing
 CFLAGS   += -I $(XEN_ROOT)/tools/include -I $(XEN_LIBXC) -I $(XEN_XENSTORE)

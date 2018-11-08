@@ -541,9 +541,9 @@ void dispatch_list(struct mount *mount, struct fsif_request *req)
         /* If there was any error with reading the directory, errno will be set */
         error_code = errno;
         /* Copy file names of the remaining non-NULL dirents into buf */
-        assert(NAME_MAX < PAGE_SIZE >> 1);
+        assert(NAME_MAX < XC_PAGE_SIZE >> 1);
         while(dirent != NULL && 
-                (PAGE_SIZE - ((unsigned long)buf & (PAGE_SIZE - 1))) > NAME_MAX)
+                (XC_PAGE_SIZE - ((unsigned long)buf & (XC_PAGE_SIZE - 1))) > NAME_MAX)
         {
             int curr_length = strlen(dirent->d_name) + 1;        
             memcpy(buf, dirent->d_name, curr_length);

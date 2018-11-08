@@ -32,7 +32,7 @@
 #define __LIB_FS_BACKEND__
 
 #include <aio.h>
-#include <xs.h>
+#include <xenstore.h>
 #include <xen/grant_table.h>
 #include <xen/event_channel.h>
 #include <xen/io/ring.h>

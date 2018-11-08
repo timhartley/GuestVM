@@ -27,12 +27,16 @@
  *         Mick Jordan
  */
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+//#include <xentoollog.h>
 #include <xenctrl.h>
+#include <xenctrl_compat.h>
 #include <sys/mman.h>
-#include <xs.h>
+#include <xenstore.h>
+#include <guk/mm.h>
 #include "db-frontend.h"
 
 /* uncomment next line to build a version that traces all activity to a file in /tmp */
@@ -708,14 +712,14 @@ int db_attach(int domain_id)
     if (ret != 0) return ret;
     //printf("Connected to the debugging backend (gref=%d, evtchn=%d, dgref=%d).\n", gref, evtchn, dgref);
 
-    gnth = xc_gnttab_open();
+    gnth = xc_gnttab_open(NULL, 0);
     assert(gnth != -1);
     /* Map the page and create frontend ring */
     sring = xc_gnttab_map_grant_ref(gnth, dom_id, gref, PROT_READ | PROT_WRITE);
     FRONT_RING_INIT(&ring, sring, PAGE_SIZE);
     /* Map the data page */
     data_page =  xc_gnttab_map_grant_ref(gnth, dom_id, dgref, PROT_READ | PROT_WRITE);
-    evth = xc_evtchn_open();
+    evth = xc_evtchn_open(NULL, 0);
     assert(evth != -1);
 
     local_evtchn = xc_evtchn_bind_interdomain(evth, dom_id, evtchn);

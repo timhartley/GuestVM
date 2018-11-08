@@ -31,7 +31,7 @@
 #ifndef __EXEC_BACKEND_H__
 #define __EXEC_BACKEND_H__
 
-#include <xs.h>
+#include <xenstore.h>
 #include <xen/grant_table.h>
 #include <xen/event_channel.h>
 #include <xen/io/ring.h>

@@ -256,7 +256,7 @@ static void handle_connection(int frontend_dom_id, int export_id)
                                     mount->dom_id,
                                     mount->gref,
                                     PROT_READ | PROT_WRITE);
-    BACK_RING_INIT(&mount->ring, sring, PAGE_SIZE);
+    BACK_RING_INIT(&mount->ring, sring, XC_PAGE_SIZE);
     mount->nr_entries = mount->ring.nr_ents; 
     xenbus_write_backend_ready(mount);
 

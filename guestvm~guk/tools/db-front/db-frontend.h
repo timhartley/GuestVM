@@ -28,7 +28,7 @@
 #ifndef __LIB_DB_FRONTEND__
 #define __LIB_DB_FRONTEND__
 
-#include <xs.h>
+#include <xenstore.h>
 #include <xen/xen.h>
 #include <xen/io/ring.h>
 #include <xen/grant_table.h>
