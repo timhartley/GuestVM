@@ -103,7 +103,7 @@ ifeq ($(TARGET_ARCH),x86_64)
   CFLAGS += -fno-stack-protector 
   endif
 CFLAGS += -m64 -mno-red-zone -fpic -fno-reorder-blocks
-CFLAGS += -fno-asynchronous-unwind-tables
+CFLAGS += -fno-asynchronous-unwind-tables -fPIC
 # This is for Maxine includes
 CFLAGS += -Dw64 
 LDFLAGS += -m elf_x86_64
@@ -147,7 +147,7 @@ HDRS += $(extra_heads)
 default: $(TARGET)
 
 $(TARGET):  $(OBJS) fdlibmobjs/$(FDLIBMLIBA) $(UKERNEL_OBJ) ${MAXINE_SUBSTRATE}/${LIB_MAXINE} $(LDS)
-	$(LD) $(LDFLAGS_FINAL) $(UKERNEL_OBJ) $(OBJS) fdlibmobjs/$(FDLIBMLIBA) $(LDLIBS) -o $@
+	$(CC) $(LDFLAGS_FINAL) -fno-builtin -fno-stack-protector $(UKERNEL_OBJ) $(OBJS) fdlibmobjs/$(FDLIBMLIBA) $(LDLIBS) -o $@
 	if [ ! -e ${MAXINE_SUBSTRATE}/maxvm ]; then ln -s `pwd`/maxve ${MAXINE_SUBSTRATE}/maxvm; fi
 #	gzip -f -9 -c $@ >$@.gz
 
