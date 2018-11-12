@@ -147,7 +147,7 @@ public class VEBootImageGenerator {
         }
 
         final List<String> vmArgs = MAXINE_IMAGE_VMARGS.getValue();
-        final String[] vmArgsArray = addArg(vmArgs.toArray(new String[vmArgs.size()]), "-Xbootclasspath/a:" + pathToVEJDK());
+        final String[] vmArgsArray = addArg(vmArgs.toArray(new String[vmArgs.size()]), "-Xbootclasspath/a:" + pathToVEJDK() + ":" + pathToSunNioClasses());
         String[] javaArgs = buildJavaArgs(BootImageGenerator.class, prefixClassPath(fixupClassPath()),  vmArgsArray, systemProperties, generatorArgs);
         if (MONITOR.getValue() != null) {
             javaArgs = addArg(javaArgs, "-monitor=" + MONITOR.getValue());
@@ -160,7 +160,7 @@ public class VEBootImageGenerator {
         }
 
         if (!checkEcho(javaArgs)) {
-            exec(null, javaArgs, System.out, System.err, System.in);
+            exec(new File(System.getProperty("user.dir")), javaArgs, System.out, System.err, System.in);
         }
     }
 
@@ -224,6 +224,14 @@ public class VEBootImageGenerator {
     private static String pathToVEJDK() {
         final File path = new File("com.oracle.max.ve.jdk/bin");
         return path.getAbsolutePath();
+    }
+
+    /**
+     * Path of classes which extend from sun.nio.ch.
+     * @return
+     */
+    private static String pathToSunNioClasses() {
+        return new File("../com.oracle.max.ve/bin").getAbsolutePath();
     }
 
     private static String[] addArg(String[] arguments, String argument) {
